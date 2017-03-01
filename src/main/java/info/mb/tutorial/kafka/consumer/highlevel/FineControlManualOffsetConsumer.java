@@ -27,12 +27,9 @@ public class FineControlManualOffsetConsumer {
 		props.put("auto.commit.intereval.ms", 1000);
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		props.put("auto.offset.reset", "earliest");
 
 		Consumer<String, String> consumer = new KafkaConsumer<>(props);
 		consumer.subscribe(Arrays.asList("testTopic"));
-		
-		ZkUtils.maybeDeletePath("localhost:2181", "/consumers/Group1");
 
 		// FINER MANUAL OFFSET CONTROL CODE
 		List<ConsumerRecord<String, String>> consumerRecordsList = new ArrayList<>();

@@ -26,7 +26,7 @@ public class TestProducer {
 
 		Producer<String, String> producer = new KafkaProducer<>(props);
 		for (int i = 1; i <= 1000; i++) {
-			producer.send(new ProducerRecord<String, String>(TOPIC, PARTITION, Integer.toString(i),
+			producer.send(new ProducerRecord<String, String>(TOPIC, PARTITION, TIMESTAMP,Integer.toString(i),
 					Integer.toString(i)));
 		}
 		producer.close();
