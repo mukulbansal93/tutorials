@@ -10,7 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 public class TestProducer {
 	public static void main(String... s) {
 
-		final String TOPIC = "test-topic-from-code";
+		final String TOPIC = "testTopic";
 		final Integer PARTITION = 0;
 		final Long TIMESTAMP = Time.now();
 
@@ -26,7 +26,7 @@ public class TestProducer {
 
 		Producer<String, String> producer = new KafkaProducer<>(props);
 		for (int i = 1; i <= 1000; i++) {
-			producer.send(new ProducerRecord<String, String>(TOPIC, PARTITION, TIMESTAMP, Integer.toString(i),
+			producer.send(new ProducerRecord<String, String>(TOPIC, PARTITION, Integer.toString(i),
 					Integer.toString(i)));
 		}
 		producer.close();
