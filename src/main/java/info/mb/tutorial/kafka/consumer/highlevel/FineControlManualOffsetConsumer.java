@@ -13,9 +13,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
-
-import kafka.utils.ZkUtils;
-
+/**
+ *  
+ * @author MBansal
+ */
 public class FineControlManualOffsetConsumer {
 	public static void main(String... s) {
 

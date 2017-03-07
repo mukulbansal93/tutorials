@@ -5,6 +5,10 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 
+/**
+ *  
+ * @author MBansal
+ */
 public class SimpleApp {
 	public static void main(String... s) {
 		String logFile = "/usr/spark-2.1.0-bin-hadoop2.7/bin/spark-shell.cmd";

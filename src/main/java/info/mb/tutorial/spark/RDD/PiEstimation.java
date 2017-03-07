@@ -7,6 +7,10 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.util.LongAccumulator;
 
+/**
+ *  
+ * @author MBansal
+ */
 public class PiEstimation {
 	public static void main(String... s) {
 

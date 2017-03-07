@@ -8,8 +8,11 @@ import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
 
-import info.mb.tutorial.spark.dto.Person;
-
+import info.mb.tutorial.spark.dto.PersonDTO;
+/**
+ *  
+ * @author MBansal
+ */
 public class EncoDecoDataset {
 
 	public static void main(String... s) {
@@ -17,13 +20,14 @@ public class EncoDecoDataset {
 		SparkSession spark = SparkSession.builder().appName("Java Spark SQL Encoding Decoding example")
 				.config("spark.some.config.option", "some-value").getOrCreate();
 
-		Person person = new Person();
+		PersonDTO person = new PersonDTO();
 		person.setName("Mukul");
 		person.setAge(23);
 
 		//CREATING A DATASET FROM A DTO 
-		Encoder<Person> personEncoder = Encoders.bean(Person.class);
-		Dataset<Person> personDS = spark.createDataset(Collections.singletonList(person), personEncoder);
+		Encoder<PersonDTO> personEncoder = Encoders.bean(PersonDTO.class);
+		
+		Dataset<PersonDTO> personDS = spark.createDataset(Collections.singletonList(person), personEncoder);
 		personDS.show();
 
 		// ENCODERS FOR PRIMITIVE DTASET ARE PROVIDED BY SPARK
@@ -35,7 +39,7 @@ public class EncoDecoDataset {
 		
 		//CREATING A DATASET FROM FILE CONTENTS
 		String path="/usr/spark-2.1.0-bin-hadoop2.7/examples/src/main/resources/people.json";
-		Dataset<Person> personDSFromFile = spark.read().json(path).as(personEncoder);
+		Dataset<PersonDTO> personDSFromFile = spark.read().json(path).as(personEncoder);
 		personDSFromFile.show();
 	}
 }

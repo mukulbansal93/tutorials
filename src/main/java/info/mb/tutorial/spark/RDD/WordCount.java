@@ -13,6 +13,10 @@ import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
 
+/**
+ *  
+ * @author MBansal
+ */
 public class WordCount {
 
 	public static void main(String... s) {

@@ -1,8 +1,11 @@
 package info.mb.tutorial.spark.dto;
 
 import java.io.Serializable;
-
-public class Person implements Serializable{
+/**
+ *  
+ * @author MBansal
+ */
+public class PersonDTO implements Serializable{
 
 	private String name;
 	private int age;

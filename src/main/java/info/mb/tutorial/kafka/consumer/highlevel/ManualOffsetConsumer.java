@@ -9,7 +9,10 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-
+/**
+ *  
+ * @author MBansal
+ */
 public class ManualOffsetConsumer {
 	public static void main(String... s) {
 

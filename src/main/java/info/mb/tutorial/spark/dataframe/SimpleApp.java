@@ -6,7 +6,10 @@ import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-
+/**
+ *  
+ * @author MBansal
+ */
 public class SimpleApp {
 	public static void main(String... s) {
 
