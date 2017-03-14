@@ -38,6 +38,19 @@ import scala.Tuple2;
  * output formats are JSON with the JSONInputDTO and JSONOutputDTO as their
  * respective DTO classes.
  * 
+ * Input Data Format-
+ * 
+ * {"id":"1","userId":"1","groupId":"11","timestamp":1489467559}
+ * {"id":"2","userId":"2","groupId":"12","timestamp":1489467560}
+ * {"id":"3","userId":"1","groupId":"11","timestamp":1489467561}
+ * 
+ * 
+ * Output Data Format-
+ * 
+ * { "groupId": String, "eventsPerGroup": Number, "uniqueUsersPerGroup": Number,
+ * "timestamp": Unix timestamp(timestamp during which following values were
+ * crunched) }
+ * 
  * @author MBansal
  */
 public class JSONProcessingExample {
@@ -96,14 +109,14 @@ public class JSONProcessingExample {
 								return new ObjectMapper().readValue(string, JSONInputDTO.class);
 							}
 						});
-						
+
 						// PROCESSING USING SPARK SQL
 						Dataset<Row> rowDF = spark.createDataFrame(jsonInputDTORDD, JSONInputDTO.class);
 						Dataset<JSONInputDTO> testInputDTODF = rowDF.as(testInputDTOEncoder);
 						testInputDTODF.createOrReplaceTempView("testInput");
 						Dataset<Row> processedDF = spark.sql(
 								"select groupId, count(distinct UserID) as uniqueUsersPerGroup,count(id) as totalEventsPerGroup from testInput GROUP BY groupId");
-						
+
 						// CONVERTING PROCESSED DATAFRAME TO RDD AND THEN TO
 						// REQUIRED OUTPUT JSON FORMAT
 						JavaRDD<JSONOutputDTO> processedStream = processedDF.toJavaRDD()
