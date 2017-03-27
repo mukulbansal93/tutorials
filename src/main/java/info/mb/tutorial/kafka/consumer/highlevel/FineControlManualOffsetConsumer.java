@@ -25,7 +25,7 @@ public class FineControlManualOffsetConsumer {
 		props.put("group.id", "Group1");
 		// MANUAL OFFSET CONTROL
 		props.put("enable.auto.commit", "false");
-		props.put("auto.commit.intereval.ms", 1000);
+		props.put("auto.commit.interval.ms", 1000);
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
