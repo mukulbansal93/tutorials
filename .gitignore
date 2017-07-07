@@ -4,3 +4,4 @@ target/
 README.md~
 .gitignore~
 
+/bin/

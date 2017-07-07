@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.util.Time;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
@@ -136,18 +137,20 @@ public class JSONProcessingExample {
 				});
 
 		// SENDING PROCESSED OUTPUT TO KAFKA
+		Producer<String, String> producer=TestProducer.initKafkaProducer(brokers);
 		processedStream.foreachRDD(new VoidFunction<JavaRDD<JSONOutputDTO>>() {
 			@Override
 			public void call(JavaRDD<JSONOutputDTO> javaRDD) throws Exception {
 				javaRDD.foreach(new VoidFunction<JSONOutputDTO>() {
 					@Override
 					public void call(JSONOutputDTO outputJson) throws Exception {
-						TestProducer.pushToKafka(outputTopic, brokers,
+						TestProducer.pushToKafka(producer,outputTopic,
 								new ObjectMapper().writeValueAsString(outputJson));
 					}
 				});
 			}
 		});
+		producer.close();
 
 		// STARTING SPARK STREAM
 		jssc.start();

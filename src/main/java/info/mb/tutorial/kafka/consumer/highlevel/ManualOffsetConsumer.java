@@ -9,8 +9,9 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+
 /**
- *  
+ * 
  * @author MBansal
  */
 public class ManualOffsetConsumer {
@@ -21,27 +22,30 @@ public class ManualOffsetConsumer {
 		props.put("group.id", "Group1");
 		// MANUAL OFFSET CONTROL
 		props.put("enable.auto.commit", "false");
-		props.put("auto.commit.interval.ms", 1000);
+		//props.put("auto.commit.interval.ms", 1000);
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		//props.put("max.poll.records",20);
+		props.put("max.poll.interval.ms",600000);
 
 		Consumer<String, String> consumer = new KafkaConsumer<>(props);
-		consumer.subscribe(Arrays.asList("testTopic"));
+		consumer.subscribe(Arrays.asList("test"));
 
-		final int minBatchSize = 200;
+		final int minBatchSize = 10;
 		List<ConsumerRecord<String, String>> consumerRecordsList = new ArrayList<>();
 		try {
 			while (true) {
-				ConsumerRecords<String, String> records = consumer.poll(100);
+				System.out.println("Started Polling...");
+				ConsumerRecords<String, String> records = consumer.poll(10);
 				for (ConsumerRecord<String, String> record : records) {
 					consumerRecordsList.add(record);
 				}
+				System.out.println("Stopped Polling.");
 
 				// RECORD PROCESSIGN AND OFFSET COMMITITNG
 				if (consumerRecordsList.size() > minBatchSize)
 					for (ConsumerRecord<String, String> record : consumerRecordsList) {
-						System.out.printf("Offset: %d, key: %s, value: %s, Timestamp: %d%n", record.offset(),
-								record.key(), record.value(), record.timestamp());
+						processRecord(record);
 					}
 				consumer.commitSync();
 				consumerRecordsList.clear();
@@ -50,6 +54,17 @@ public class ManualOffsetConsumer {
 			e.printStackTrace();
 		} finally {
 			consumer.close();
+		}
+	}
+
+	private static void processRecord(ConsumerRecord<String, String> record) {
+		try {
+			System.out.println("Processing.......");
+			Thread.sleep(1000);
+			System.out.printf("Offset: %d, key: %s, value: %s, Timestamp: %d%n", record.offset(), record.key(),
+					record.value(), record.timestamp());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

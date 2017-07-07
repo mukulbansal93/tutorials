@@ -6,8 +6,9 @@ import org.apache.hadoop.util.Time;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+
 /**
- *  
+ * 
  * @author MBansal
  */
 public class TestProducer {
@@ -22,12 +23,14 @@ public class TestProducer {
 		final String BOOTSTRAP_SERVERS = s[1];
 		final Integer PARTITION = Integer.parseInt(s[2]);
 
+		Producer<String,String> KAFKA_PRODUCER=initKafkaProducer(BOOTSTRAP_SERVERS);
 		for (int i = 1; i <= 1000; i++) {
-			pushToKafka(TOPIC, BOOTSTRAP_SERVERS, PARTITION, Integer.toString(i), Integer.toString(i));
+			pushToKafka(KAFKA_PRODUCER, TOPIC, PARTITION, Integer.toString(i), Integer.toString(i));
 		}
+		KAFKA_PRODUCER.close();
 	}
 
-	public static void pushToKafka(String topic, String bootstrapServers, Integer partition, String key, String value) {
+	public static Producer<String, String> initKafkaProducer(String bootstrapServers) {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", bootstrapServers);
 		props.put("ack", "all");
@@ -37,25 +40,14 @@ public class TestProducer {
 		props.put("buffer.memeory", 33554432);
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		return new KafkaProducer<>(props);
+	}
 
-		Producer<String, String> producer = new KafkaProducer<>(props);
+	public static void pushToKafka(Producer<String, String> producer, String topic, Integer partition, String key, String value) {
 		producer.send(new ProducerRecord<String, String>(topic, partition, Time.now(), key, value));
-		producer.close();
 	}
-	
-	public static void pushToKafka(String topic, String bootstrapServers, String value) {
-		Properties props = new Properties();
-		props.put("bootstrap.servers", bootstrapServers);
-		props.put("ack", "all");
-		props.put("retries", 0);
-		props.put("batch-size", 100);
-		props.put("linger.ms", 5);
-		props.put("buffer.memeory", 33554432);
-		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
-		Producer<String, String> producer = new KafkaProducer<>(props);
+	public static void pushToKafka(Producer<String, String> producer, String topic, String value) {
 		producer.send(new ProducerRecord<String, String>(topic, value));
-		producer.close();
 	}
 }
