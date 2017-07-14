@@ -13,10 +13,10 @@ import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.kstream.KTable;
 
 /**
- *  
+ * 
  * @author MBansal
  */
-public class KStreamExample {
+public class WordCountKStreamExample {
 	public static void main(String... s) {
 
 		final String INPUT_TOPIC_NAME = "streams-file-input";
@@ -25,8 +25,9 @@ public class KStreamExample {
 		Properties properties = new Properties();
 		properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-wordcount");
 		properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-		properties.put(StreamsConfig.KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-		properties.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, Serdes.Long().getClass().getName());
+		properties.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+		properties.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+		properties.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 2 * 1000);
 
 		KStreamBuilder builder = new KStreamBuilder();
 
@@ -40,17 +41,30 @@ public class KStreamExample {
 		// whatever may be stored
 		// in the message keys).
 
-		KStream<String, String> streamSource = builder.stream(INPUT_TOPIC_NAME);
+		KStream<String, String> streamSource = builder.stream(stringSerde, stringSerde, INPUT_TOPIC_NAME);
 
-		//countByKey() takes parameter- name of the resulting KTable
+		// count() takes parameter- name of the resulting KTable
+		/*
+		 * KTable<String, Long> kTable = streamSource.flatMapValues(new
+		 * ValueMapper<String, Iterable<String>>() {
+		 * 
+		 * @Override public Iterable<String> apply(String value) { return
+		 * Arrays.asList(value.toLowerCase(Locale.getDefault()).split(" ")); }
+		 * }).map(new KeyValueMapper<String, String, KeyValue<String, String>>() {
+		 * 
+		 * @Override public KeyValue<String, String> apply(String key, String value) {
+		 * return new KeyValue<>(value, value); } }).groupByKey().count("Counts");
+		 */
+
+		// CORRESSPONDING LAMBDA
 		KTable<String, Long> kTable = streamSource.flatMapValues((x) -> Arrays.asList(x.toLowerCase().split("\\W+")))
-				.map((key, value) -> new KeyValue<String, String>(value, value)).countByKey("kTable");
+				.map((key, value) -> new KeyValue<String, String>(value, value)).groupByKey().count("Counts");
 
 		// need to override value serde to Long type
 		kTable.to(stringSerde, longSerde, OUTPUT_TOPIC_NAME);
 
 		KafkaStreams streams = new KafkaStreams(builder, properties);
-		
+
 		streams.start();
 
 		// usually the stream application would be running forever,

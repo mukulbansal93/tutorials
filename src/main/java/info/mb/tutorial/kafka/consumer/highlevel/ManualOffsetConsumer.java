@@ -25,13 +25,13 @@ public class ManualOffsetConsumer {
 		//props.put("auto.commit.interval.ms", 1000);
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		//props.put("max.poll.records",20);
-		props.put("max.poll.interval.ms",600000);
+		props.put("max.poll.records",5);
+		props.put("max.poll.interval.ms",30000);
 
 		Consumer<String, String> consumer = new KafkaConsumer<>(props);
 		consumer.subscribe(Arrays.asList("test"));
 
-		final int minBatchSize = 10;
+		final int minBatchSize = 2;
 		List<ConsumerRecord<String, String>> consumerRecordsList = new ArrayList<>();
 		try {
 			while (true) {
@@ -60,7 +60,7 @@ public class ManualOffsetConsumer {
 	private static void processRecord(ConsumerRecord<String, String> record) {
 		try {
 			System.out.println("Processing.......");
-			Thread.sleep(1000);
+			Thread.sleep(4000);
 			System.out.printf("Offset: %d, key: %s, value: %s, Timestamp: %d%n", record.offset(), record.key(),
 					record.value(), record.timestamp());
 		} catch (Exception e) {
