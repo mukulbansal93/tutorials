@@ -1,4 +1,4 @@
-package info.mb.tutorial.algorithm.genetic;
+package info.mb.tutorial.algorithm.genetic.aco;
 
 import java.util.ArrayList;
 import java.util.Arrays;
