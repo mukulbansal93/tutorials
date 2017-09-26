@@ -207,7 +207,6 @@ public class AntColonyOptimization {
 			}
 		}
 		for (Ant a : ants) {
-			// CONTRIBUTING TO GLOBAL PHEROMONE LEVELS
 			double contribution = Q / a.traversalCost(cityMap);
 			pheromoneLevels[a.traversalOrder[numberOfCities - 1]][a.traversalOrder[0]] += contribution;
 			// UPDATING PHEROMONE LEVELS OF TRAVERSED PATHS
